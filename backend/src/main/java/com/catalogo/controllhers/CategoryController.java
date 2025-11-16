@@ -1,9 +1,12 @@
 package com.catalogo.controllhers;
 
 import java.net.URI;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.catalogo.dto.CategoryDTO;
+import com.catalogo.entities.Category;
 import com.catalogo.services.CategoryService;
 
 @RestController
@@ -26,11 +30,11 @@ public class CategoryController {
 	private CategoryService service;
 
 	@GetMapping
-	public ResponseEntity<List<CategoryDTO>> findAll() {
-
-		List<CategoryDTO> list = service.findAll();
-
-		return ResponseEntity.ok().body(list);
+	public ResponseEntity<Page<Category>> findAll(
+			@PageableDefault(page = 0, size = 10, sort = "name", direction = Sort.Direction.ASC) Pageable pageable){
+		
+		Page<Category> page = service.findAll(pageable);
+		return ResponseEntity.ok(page);
 	}
 
 	@GetMapping(value = "/{id}")
@@ -58,7 +62,7 @@ public class CategoryController {
 
 	}
 
-	@DeleteMapping("value = {/id}")
+	@DeleteMapping(value = "/{id}")
 	public ResponseEntity<Void> delete(@PathVariable Long id) {
 		service.delete(id);
 
