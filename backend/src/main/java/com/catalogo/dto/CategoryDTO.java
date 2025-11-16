@@ -41,5 +41,13 @@ public class CategoryDTO implements Serializable {
 	public void setName(String name) {
 		this.name = name;
 	}
+	
+	
+	public static CategoryDTO converterCategoryToCategoryDto(Category entity) {
+		if(entity.equals(null)) {
+			throw new RuntimeException("Essa categoria não foi encontrada");
+		}
+		return new CategoryDTO(entity);
+	}
 
 }
